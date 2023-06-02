@@ -100,7 +100,6 @@ class BleCallback : BluetoothGattCallback() {
      */
     override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) = uiCallback.state("onReadRemoteRssi：rssi：$rssi")
 
-
     /**
      * UI回调
     */

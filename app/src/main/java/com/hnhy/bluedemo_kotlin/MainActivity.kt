@@ -3,7 +3,8 @@ package com.hnhy.bluedemo_kotlin
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.*
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,7 @@ import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat
 import no.nordicsemi.android.support.v18.scanner.ScanCallback
 import no.nordicsemi.android.support.v18.scanner.ScanResult
 
-
-class MainActivity : AppCompatActivity() {
+ class MainActivity : AppCompatActivity() {
 
     //视图绑定
     private lateinit var binding: ActivityMainBinding
@@ -43,6 +43,23 @@ class MainActivity : AppCompatActivity() {
 
     //当前是否扫描
     private var isScanning = false
+
+
+    val uuidListener = object : BluetoothProfile.ServiceListener {
+        override fun onServiceDisconnected(profile: Int) {
+            // 这里处理服务断开连接事件
+        }
+
+        override fun onServiceConnected(profile: Int, proxy: BluetoothProfile?) {
+            if (profile == BluetoothProfile.GATT) {
+                val gatt = proxy as BluetoothGatt
+                val services = gatt.services
+                for (service in services) {
+                    Log.d("Bluetooth UUID", service.uuid.toString())
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 扫描蓝牙
+     * 开始扫描蓝牙
      */
     private fun scan() {
         if (!defalutAdapter.isEnabled){
@@ -96,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 停止扫描
+     * 停止扫描蓝牙
      */
     private fun stopScan() {
         if (!defalutAdapter.isEnabled) {
@@ -168,8 +185,6 @@ class MainActivity : AppCompatActivity() {
         //刷新列表适配器
         bleAdapter.notifyDataSetChanged()
     }
-
-
 
 }
 

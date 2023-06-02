@@ -14,7 +14,7 @@ object BleHelper {
      */
     fun enableIndicateNotification(gatt: BluetoothGatt) : Boolean =
         setCharacteristicNotification(gatt, gatt.getService(UUID.fromString(BleConstant.SERVICE_UUID))
-            .getCharacteristic(UUID.fromString(BleConstant.CHARACTERISTIC_INDICATE_UUID)))
+            .getCharacteristic(UUID.fromString(BleConstant?.CHARACTERISTIC_INDICATE_UUID)))
 
     /**
      * 设置特征通知
@@ -37,8 +37,8 @@ object BleHelper {
     @SuppressLint("MissingPermission")
     fun sendCommand(gatt: BluetoothGatt, command: String, isResponse: Boolean): Boolean =
         gatt.writeCharacteristic(gatt.getService(UUID.fromString(BleConstant.SERVICE_UUID))
-            .getCharacteristic(UUID.fromString(BleConstant.CHARACTERISTIC_WRITE_UUID)).apply {
+            ?.getCharacteristic(UUID.fromString(BleConstant.CHARACTERISTIC_WRITE_UUID))?.apply {
                 writeType = if (isResponse) WRITE_TYPE_DEFAULT else WRITE_TYPE_NO_RESPONSE
-                value = ByteUtils.hexStringToBytes(command) })
+                value = ByteUtils?.hexStringToBytes(command) })
 
 }
